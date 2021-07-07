@@ -5,7 +5,7 @@ services:
     image: vmw-calculator-frontend:1.0.0
     build:
       context: ./../vmw-calculator-frontend
-      target: dev
+      # target: dev
     env_file:
       - ./../vmw-calculator-frontend/development.env
     volumes: 
