@@ -46,6 +46,23 @@ services:
     restart: unless-stopped
     stdin_open: true
 
+  divisionservice:
+    container_name: vmw-calculator-devisionservice
+    image: vmw-calculator-divisionservice:1.0.0
+    build:
+      context: ./../vmw-calculator-divisionservice
+    working_dir: /app
+    volumes:
+        - ./../vmw-calculator-divisionservice:/app
+    networks: 
+      calc:
+        ipv4_address: 172.20.0.6
+    ports:
+      - 5001:5001
+      - 5000:5000
+    restart: unless-stopped
+    stdin_open: true
+
   proxy:
     image: nginx
     container_name: vmw-calculator-nginx-proxy
