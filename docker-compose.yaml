@@ -33,7 +33,7 @@ services:
     restart: unless-stopped
     stdin_open: true
   
-  substractservice:
+  subtractservice:
     container_name: vmw-calculator-subtractservice
     image: vmw-calculator-subtractservice:1.0.0
     build:
@@ -51,15 +51,11 @@ services:
     image: vmw-calculator-divisionservice:1.0.0
     build:
       context: ./../vmw-calculator-divisionservice
-    working_dir: /app
-    volumes:
-        - ./../vmw-calculator-divisionservice:/app
     networks: 
       calc:
         ipv4_address: 172.20.0.6
     ports:
-      - 5001:5001
-      - 5000:5000
+      - 8083:5000
     restart: unless-stopped
     stdin_open: true
 
