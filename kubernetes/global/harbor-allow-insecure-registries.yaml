@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: harbor-allow-insecure-registries
+  namespace: calculator
+data:
+  daemon.json: |
+    { "insecure-registries":["harbor-svc.haas-422.pez.vmware.com"] }

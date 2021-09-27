@@ -1,0 +1,41 @@
+apiVersion: projectcontour.io/v1
+kind: HTTPProxy
+metadata:
+  name: contour-ingress-calculator
+  namespace: calculator
+spec:
+  virtualhost:
+    fqdn: calculator.lb.corp.tanzu #calculator.192.168.220.11.nip.io #calculator.corp.tanzu
+  routes:
+    - services:
+        - name: substractservice
+          port: 80
+      conditions:
+      - prefix: /api/subtractservice  # matches `multi-path.bar.com/blog` or `multi-path.bar.com/blog/*`
+      pathRewritePolicy:
+        replacePrefix:
+        - prefix: /api/subtractservice
+          replacement: /      
+    - services:
+      - name: addservice
+        port: 80
+      conditions:
+        - prefix: /api/addservice  # matches `multi-path.bar.com/blog` or `multi-path.bar.com/blog/*`
+      pathRewritePolicy:
+        replacePrefix:
+        - prefix: /api/addservice
+          replacement: /
+    - services:
+      - name: divisionservice
+        port: 80
+      conditions:
+        - prefix: /api/divisionservice  # matches `multi-path.bar.com/blog` or `multi-path.bar.com/blog/*`
+      pathRewritePolicy:
+        replacePrefix:
+        - prefix: /api/divisionservice
+          replacement: /divisionops
+    - services:
+      - name: calcfrontendservice
+        port: 80
+      conditions:
+        - prefix: /  # matches everything else

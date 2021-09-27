@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: calc-app-config
+  namespace: calculator
+data:
+  NODE_ENV: production
+  REACT_APP_ADD_SERVICE: /api/addservice
+  REACT_APP_SUBTRACT_SERVICE: /api/subtractservice
+  REACT_APP_SUBTRACT_SERVICE: /api/divisionservice

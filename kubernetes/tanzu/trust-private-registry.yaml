@@ -1,0 +1,12 @@
+apiVersion: run.tanzu.vmware.com/v1alpha1
+kind: TkgServiceConfiguration
+metadata:
+  name: tkg-service-configuration
+spec:
+  defaultCNI: antrea
+  trust:
+    additionalTrustedCAs:
+      - name: first-cert-name
+        data: base64-encoded string of a PEM encoded public cert 1
+      - name: second-cert-name
+        data: base64-encoded string of a PEM encoded public cert 2

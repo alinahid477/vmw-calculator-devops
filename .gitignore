@@ -1,0 +1,5 @@
+.env
+.bash_history
+.local
+*.nogit.*
+.vmware-cna-saas

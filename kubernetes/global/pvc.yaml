@@ -1,0 +1,12 @@
+# apply if needed. 
+apiVersion: v1 
+kind: PersistentVolumeClaim 
+metadata:
+  name: workload-cluster-pvc
+spec:
+ storageClassName: k8s-policy
+ accessModes:
+   - ReadWriteOnce
+ resources:
+   requests:
+     storage: 4Gi

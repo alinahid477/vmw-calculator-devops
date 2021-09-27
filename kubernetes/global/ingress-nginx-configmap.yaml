@@ -1,0 +1,7 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: calc-k8-ingress-nginx-controller
+  namespace: calc-k8-ingress-controller
+data:
+  proxy-buffer-size: "128k"
