@@ -78,6 +78,9 @@ OR
 
 STEP 2: Create kubernetes cluster
 =======================================
+**You can use [vsphere with tanzu wizard](https://github.com/alinahid477/vsphere-with-tanzu-wizard) to create workload cluster and skip the below**
+
+
 To create cluster login into vsphere kubernetes using tkg:
 
 `$ kubectl-vsphere login --insecure-skip-tls-verify --server sddc.private.local -u administrator@vsphere.local`
@@ -86,11 +89,8 @@ To create cluster login into vsphere kubernetes using tkg:
 
 then:
 
-`$ kubectl apply -f calc-devops/kubernetes/tanzu/calc-k8-cluster.yaml`
+`$ kubectl apply -f kubernetes/tanzu/calc-k8-cluster.yaml`
 
-OR
-
-**You can use [vsphere with tanzu wizard](https://github.com/alinahid477/vsphere-with-tanzu-wizard) to create workload cluster**
 
 ## file explanation:
 In the yaml file notice the below section:
@@ -109,28 +109,30 @@ This takes approx 10mins to complete and kubernetes cluster to be ready. (Good t
 STEP 3: Login to Kubernetes cluster
 =======================================
 
+**You can use [vsphere with tanzu wizard](https://github.com/alinahid477/vsphere-with-tanzu-wizard) for automating one click login to skip the below**
+
 ***UPDATE: If you are using ssh tunnel through the docker container as described here: https://github.com/alinahid477/VMW/tree/main/calcgithub THEN skip this section as this is already done.***
 
 - `$ kubectl vsphere login --tanzu-kubernetes-cluster-name calc-k8-cluster --server sddc.private.local --insecure-skip-tls-verify -u administrator@vsphere.local`
 - `$ kubectl config use-context calc-k8-cluster`
 
 
-**You can use [vsphere with tanzu wizard](https://github.com/alinahid477/vsphere-with-tanzu-wizard) for automating one click login**
+
 
 
 STEP 4: Prepare kubernetes cluster for application
 ==================================================
 Now that the cluster is created lets prepare the cluster for our app.
 
-Below are the steps (basically, apply all yaml in calc-devops/kubernetes/global).
+Below are the steps (basically, apply all yaml in kubernetes/global).
 
 - create kubernetes namespace: 
 
-    `$ kubectl apply -f calc-devops/kubernetes/global/namespace.yaml`
+    `$ kubectl apply -f kubernetes/global/namespace.yaml`
 
 - pod security policy: 
 
-    `kubectl apply -f calc-devops/kubernetes/global/allow-psp-clusterrole.yaml`
+    `kubectl apply -f kubernetes/global/allow-psp-clusterrole.yaml`
 
     **why?** 
     
@@ -144,9 +146,9 @@ Below are the steps (basically, apply all yaml in calc-devops/kubernetes/global)
 
     **if you do not have a CICD rool already you can use Jenkins and deploy Jenkins on k8s using [JenkinsOnK8S Wizard](https://github.com/alinahid477/jenkinsonk8s)**
 
-    `kubectl apply -f calc-devops/kubernetes/global/jenkins-service-account.yaml`
+    `kubectl apply -f kubernetes/global/jenkins-service-account.yaml`
 
-    `kubectl apply -f calc-devops/kubernetes/global/jenkins-sa-rbac.yaml`
+    `kubectl apply -f kubernetes/global/jenkins-sa-rbac.yaml`
     
     We will use this service account in our Jenkins pipeline (with Kubernetes CLI plugin; see Jenkinsfile of any application in this project and check the Readme in Jenkins folder)
 
@@ -230,11 +232,11 @@ Below are the steps (basically, apply all yaml in calc-devops/kubernetes/global)
 
     - Apply ingress to our namespace "calculator"
 
-        `$ kubectl apply -f calc-devops/kubernetes/global/ingress-nginx-calculator.yaml`
+        `$ kubectl apply -f kubernetes/global/ingress-nginx-calculator.yaml`
 
     - customise deployed NGINX ingress according to our applications needs
         
-        `$ kubectl apply -f calc-devops/kubernetes/global/ingress-nginx-configmap.yaml`
+        `$ kubectl apply -f kubernetes/global/ingress-nginx-configmap.yaml`
 
         This will also create a L4 load balancer connecting to ingress controller. 
         Also this yaml will tell NGINX to map path and redirection to appropriate app via the "spec/rules".        
@@ -242,7 +244,7 @@ Below are the steps (basically, apply all yaml in calc-devops/kubernetes/global)
 - Add the environment variables in the cluster:
     Our apps (in particular the calc-frontend) utilises some environment variable
 
-    `kubectl apply -f calc-devops/kubernetes/global/configmap.prod.yaml`
+    `kubectl apply -f kubernetes/global/configmap.prod.yaml`
 
 
 STEP 5: Integrate private container registry to the cluster
@@ -259,11 +261,11 @@ There are few different ways of doing it. In this example I did it by applying c
     
     `kubectl get secret harbor-regcred --output=yaml -n calculator`
 
-    In this case the output is saved in calc-devops/kubernetes/global/harbor-secret.yaml.
+    In this case the output is saved in kubernetes/global/harbor-secret.yaml.
 
     So next time if in case I am re-creating in a different environment I could do:
 
-    `kubectl apply -f calc-devops/kubernetes/global/harbor-secret.yaml`
+    `kubectl apply -f kubernetes/global/harbor-secret.yaml`
 
     Checkout this page: https://kubernetes.io/docs/concepts/configuration/secret/ for more details on this.
 
@@ -283,9 +285,9 @@ There are few different ways of doing it. In this example I did it by applying c
 
     So create the config map (one off thingy as part of making cluster ready).
     
-    `kubectl apply -f calc-devops/kubernetes/global/harbor-allow-insecure-registries.yaml`
+    `kubectl apply -f kubernetes/global/harbor-allow-insecure-registries.yaml`
 
-    ***This DOES NOT WORK anymore. APPLY trust Tanzu Namespace wide. README located at: calc-devops/kubernetes/tanzu/readme.md***
+    ***This DOES NOT WORK anymore. APPLY trust Tanzu Namespace wide. README located at: kubernetes/tanzu/readme.md***
 
 
 STEP 6: Prepare app for deployment to the kubernetes cluster
