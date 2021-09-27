@@ -5,11 +5,11 @@ metadata:
   namespace: calculator
 spec:
   virtualhost:
-    fqdn: calculator.lb.corp.tanzu #calculator.192.168.220.11.nip.io #calculator.corp.tanzu
+    fqdn: calculator.192.168.xxx.xx.nip.io #calculator.lb.corp.tanzu #calculator.corp.tanzu
   routes:
     - services:
-        - name: substractservice
-          port: 80
+      - name: substractservice
+        port: 80
       conditions:
       - prefix: /api/subtractservice  # matches `multi-path.bar.com/blog` or `multi-path.bar.com/blog/*`
       pathRewritePolicy:
